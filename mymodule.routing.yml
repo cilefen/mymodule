@@ -1,0 +1,16 @@
+mymodule.myroute:
+  path: '/mymodule/mypath/{id}'
+  defaults:
+    _controller: '\Drupal\mymodule\Controller\MyUrlController::generateMyPage'
+    _title: 'My Page Title'
+    id: 'foobar'
+  requirements:
+    _permission: 'administer mymodule'
+
+mymodule.myform:
+  path: '/mymodule/myform'
+  defaults:
+    _form: '\Drupal\mymodule\Form\MyForm'
+    _title: 'My Form'
+  requirements:
+    _access: 'TRUE'

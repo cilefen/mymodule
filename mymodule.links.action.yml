@@ -1,0 +1,5 @@
+mymodule.action:
+  route_name: mymodule.myroute
+  title: 'My Action'
+  appears_on:
+    - system.performance_settings

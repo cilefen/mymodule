@@ -1,0 +1,5 @@
+services:
+  mymodule.subscriber:
+    class: Drupal\mymodule\Routing\MyModuleRouting
+    tags:
+    - { name: event_subscriber }

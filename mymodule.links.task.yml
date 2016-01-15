@@ -1,0 +1,14 @@
+mymodule.performance:
+  route_name: system.performance_settings
+  title: 'Performance'
+  base_route: system.performance_settings
+
+mymodule.mytask:
+  title: 'My Module'
+  route_name: mymodule.myroute
+  base_route: system.performance_settings
+
+mymodule.mytask2:
+  title: 'My Module'
+  route_name: mymodule.myroute
+  base_route: system.performance_settings

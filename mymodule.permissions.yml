@@ -1,0 +1,3 @@
+administer mymodule:
+  title: 'Administer mymodule'
+  restrict access: true

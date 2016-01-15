@@ -1,0 +1,6 @@
+name: My Module
+type: module
+description: 'Lorem Ipsum.'
+package: Development
+version: VERSION
+core: 8.x

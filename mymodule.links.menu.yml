@@ -1,0 +1,5 @@
+mymodule.mylink:
+  title: 'Configure My Module'
+  description: 'Longer description goes here'
+  parent: system.admin_config_development
+  route_name: mymodule.myroute
