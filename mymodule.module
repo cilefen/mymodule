@@ -1,6 +1,52 @@
 <?php
 
 /**
+ * Implements hook_menu().
+ */
+function mymodule_menu() {
+  $items = [];
+  $items['mymodule/myform'] = [
+    'title'=> 'My Form',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => ['_mymodule_form'],
+    'access arguments' => array('administer site configuration'),
+  ];
+  $items['admin/config/development/mymodule'] = [
+    'title' => 'My Module',
+    'description' => 'Administer my module.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('mymodule_settings'),
+    'access arguments' => array('administer site configuration'),
+    'file' => 'mymodule.admin.inc',
+  ];
+  $items['admin/config/development/performance/mymoduledefault'] = array(
+    'title' => 'My Module',
+    'description' => 'Administer my module.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('mymodule_settings'),
+    'access arguments' => array('administer site configuration'),
+    'file' => 'mymodule.admin.inc',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+  );
+  $items['admin/config/development/performance/mymodule'] = array(
+    'title' => 'My Module',
+    'description' => 'Administer my module.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('mymodule_settings'),
+    'access arguments' => array('administer site configuration'),
+    'file' => 'mymodule.admin.inc',
+    'type' => MENU_LOCAL_TASK,
+  );
+  $items['admin/config/development/performance/mymoduleaction'] = array(
+    'title' => 'My Action',
+    'page arguments' => array('create'),
+    'access arguments' => array('administer users'),
+    'type' => MENU_LOCAL_ACTION,
+  );
+  return $items;
+}
+
+/**
  * Implements hook_menu_alter().
  */
 function mymodule_menu_alter(&$items) {
@@ -10,4 +56,127 @@ function mymodule_menu_alter(&$items) {
 
 function mymodule_check_access() {
   return TRUE;
+}
+
+/**
+ * Implements hook_block_info().
+ */
+function mymodule_block_info() {
+  $blocks = [];
+  $blocks['first_block'] = [
+    'info' => t('First block from My Module'),
+  ];
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function mymodule_block_view($delta = '') {
+  if ($delta == 'first_block') {
+    return [
+      'subject' => t('First block'),
+      'content' => mymodule_block_generate(),
+    ];
+  }
+}
+
+function mymodule_block_generate() {
+  return [
+    'introduction' => array(
+      '#type' => 'markup',
+      '#markup' => '<p>' . t('General information goes here.') . '</p>',
+    ),
+    'colors' => array(
+      '#theme' => 'item_list',
+      '#items' => array(t('Red'), t('Blue'), t('Green')),
+      '#title' => t('Colors'),
+    ),
+    'materials' => array(
+      '#theme' => 'table',
+      '#caption' => t('Materials'),
+      '#header' => array(t('Material'), t('Characteristic')),
+      '#rows' => array(
+        array(t('Steel'), t('Strong')),
+        array(t('Aluminum'), t('Light')),
+      ),
+    ),
+  ];
+}
+
+/**
+ * Form callback for mymodule/myform.
+ *
+ * @return array
+ *   A form array.
+ */
+function _mymodule_form($form, &$form_state) {
+  $form['ajax_output_1'] = array(
+    '#type' => 'markup',
+    '#markup' => '<div id="ajax-output-spot"></div>',
+  );
+
+  $form['text_trigger'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Type here to trigger Ajax'),
+    '#prefix' => '<div id="text_trigger_div">',
+    '#suffix' => '</div>',
+    '#ajax' => array(
+      'event' => 'keyup',
+      'wrapper' => 'text_trigger_div',
+      'callback' => '_mymodule_ajax_text_callback',
+    ),
+  );
+
+  $form['button_trigger'] = array(
+    '#type' => 'button',
+    '#value' => t('Click here to trigger Ajax'),
+    '#ajax' => array(
+      'wrapper' => 'ajax-output-spot',
+      'callback' => '_mymodule_ajax_button_callback',
+    ),
+  );
+
+  if (!empty($form_state['values']['text_trigger'])) {
+    $form['text_trigger']['#description'] = t("You typed '@value'", array('@value' => $form_state['values']['text_trigger']));
+  }
+  return $form;
+}
+
+/**
+ * Ajax data for the text field.
+ *
+ * @param array $form
+ *   The form array.
+ * @param array $form_state
+ *   The form state.
+ *
+ * @return array
+ *   A render array.
+ */
+function _mymodule_ajax_text_callback($form, &$form_state) {
+  return $form['text_trigger'];
+}
+
+/**
+ * Ajax data for the button.
+ *
+ * @param array $form
+ *   The form array.
+ * @param array $form_state
+ *   The form state.
+ *
+ * @return array
+ *   A render array.
+ */
+function _mymodule_ajax_button_callback($form, &$form_state) {
+
+  drupal_set_message(t('You have triggered Ajax via a button click'));
+
+  return array(
+    '#type' => 'markup',
+    '#prefix' => '<div id="ajax-output-spot">',
+    '#suffix' => '</div>',
+    '#markup' => t('You clicked the button'),
+  );
 }
