@@ -14,3 +14,11 @@ mymodule.myform:
     _title: 'My Form'
   requirements:
     _access: 'TRUE'
+
+mymodule.myotherform:
+  path: '/mymodule/myotherform'
+  defaults:
+    _form: '\Drupal\mymodule\Form\MyOtherForm'
+    _title: 'My OtherForm'
+  requirements:
+    _access: 'TRUE'
